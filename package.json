@@ -1,0 +1,39 @@
+{
+  "name": "rocketgroundstation",
+  "productName": "RocketGroundStation",
+  "version": "1.0.0",
+  "description": "Rocket ground station",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+ },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aaroexxt/RocketGroundStation.git"
+  },
+  "keywords": [
+    "rocket",
+    "nodejs",
+    "electron",
+    "tvc"
+  ],
+  "author": "Aaron Becker",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/aaroexxt/RocketGroundStation/issues"
+  },
+  "homepage": "https://github.com/aaroexxt/RocketGroundStation#readme",
+  "devDependencies": {},
+  "dependencies": {
+    "ejs": "^3.1.6",
+    "electron": "^5.0.5",
+    "electron-rebuild": "^1.8.5",
+    "express": "^4.17.1",
+    "fs": "0.0.1-security",
+    "http": "0.0.1-security",
+    "path": "^0.12.7",
+    "serialport": "^9.0.6",
+    "socket.io": "^3.1.2"
+  }
+}
