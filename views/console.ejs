@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Inquiry Project Console</title>
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/custom.css">
+		<meta charset="utf-8">
+    	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	</head>
+
+	<body>
+		<div id="protect">
+			<h2 style="text-align: center;">
+				Click <a href="client">here</a> to return to the main presentation.
+			</h2>
+		</div>
+		<div id="mainContent" style="display: none;">
+			<center>
+				<h1>Inquiry Project Console >:)</h1>
+			</center>
+			<p id="clientCount">Client Count: 0</p>
+			<p id="serverMessage">Server message: N/A</p>
+			<button onClick="sendEvent('reset')">Reset Demo</button>
+			<button onClick="sendEvent('reset-responses')">Reset Responses</button>
+			<br />
+			<br />
+			<button onClick="sendEvent('intro')">Demo Intro Start</button>
+			<br />
+			<br />
+			<button onClick="sendEvent('question1')">Question 1</button><span> (Individual Creative Potential) </span>
+			<br />
+			<br />
+			<button onClick="sendEvent('question2')">Question 2</button><span> (Creativity and SES) </span>
+			<br />
+			<br />
+			<button onClick="sendEvent('question3')">Question 3</button><span> (Creativity and Culture) </span>
+			<br />
+			<br />
+			<button onClick="sendEvent('my-creativity')">My Creativity</button>
+			<br />
+			<br />
+			<button onClick="sendEvent('exit-poll')">Exit Poll</button>
+			<br />
+			<br />
+			<button onClick="sendEvent('thanks')">Final Thanks</button>
+		</div>
+
+		<br />
+		<br />
+		<div id="mainResponses" style="display: none;">
+			<h3>Responses</h3>
+			<div id="respContainer"></div>
+		</div>
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+
+
+		<nav class="nav fixed-bottom navbar-dark bg-dark justify-content-center">
+			<li class="navbar-brand">
+				<span onClick="showContent()" id="connect-server-status" class="text-danger">Server Connection: NC</span>
+			</li>
+		</nav>
+
+		<script src="socket.io/socket.io.js"></script>
+	</body>
+
+	<script>
+	let loc = window.location.href;
+	var socket = io.connect(loc.substring(0, loc.lastIndexOf("/"))+":"+(window.location.port||80), {
+		withCredentials: true
+	});
+
+	var connectedServer = false;
+	socket.on('connect', () => {
+		console.log("Connected to server");
+		connectedServer = true;
+		updateConnectionIndicator();
+	});
+	socket.on('disconnect', () => {
+		console.log("Disconnected from server");
+		connectedServer = false;
+		updateConnectionIndicator();
+	});
+
+	socket.on('console-event-done', message => {
+		document.getElementById("serverMessage").innerHTML = "Server message: "+message;
+	})
+	socket.on('console-client-count', count => {
+		document.getElementById("clientCount").innerHTML = "Client Count: "+count;
+	})
+	socket.on('console-choices', choices => {
+		let container = document.getElementById("respContainer");
+		container.innerHTML = "";
+
+		let keys = Object.keys(choices);
+		for (let i=0; i<keys.length; i++) { //don't ask lol
+			let nDiv = document.createElement("div");
+			let title = document.createElement("h4");
+			title.innerHTML = keys[i]+":";
+
+			nDiv.appendChild(title);
+
+			//reaaallly don't ask >:)
+			let res = {};
+			for (let j=0; j<choices[keys[i]].length; j++) {
+				let elem = choices[keys[i]][j];
+				if (!res.hasOwnProperty(elem)) {
+					res[elem] = 1;
+				} else {
+					res[elem]++;
+				}
+			}
+
+			let iKeys = Object.keys(res);
+			for (let j=0; j<iKeys.length; j++) {
+				let value = document.createElement("p");
+				value.innerHTML = iKeys[j]+": "+res[iKeys[j]];
+				nDiv.appendChild(value);
+			}
+			container.appendChild(nDiv);
+		}
+	})
+
+	const sendEvent = event => {
+		socket.emit("console-event", {name: event});
+	}
+
+	const showContent = () => {
+		document.getElementById("protect").style.display = "none";
+		document.getElementById("mainContent").style.display = "block";
+		document.getElementById("mainResponses").style.display = "block";
+	}
+
+	const updateConnectionIndicator = () => {
+		let statServer = document.getElementById("connect-server-status");
+		statServer.innerHTML = "Server Connection: "+(connectedServer?"OK":"NC");
+		statServer.className = (connectedServer?"":"text-danger");
+	}
+	</script>
+</html>

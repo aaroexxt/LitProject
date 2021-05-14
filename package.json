@@ -1,6 +1,6 @@
 {
-  "name": "rocketgroundstation",
-  "productName": "RocketGroundStation",
+  "name": "litproject",
+  "productName": "ALitProject",
   "version": "1.0.0",
   "description": "Rocket ground station",
   "main": "server.js",
@@ -10,20 +10,19 @@
  },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/aaroexxt/RocketGroundStation.git"
+    "url": "git+https://github.com/aaroexxt/LitProject.git"
   },
   "keywords": [
-    "rocket",
-    "nodejs",
-    "electron",
-    "tvc"
+    "project",
+	"node",
+	"creativity"
   ],
   "author": "Aaron Becker",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/aaroexxt/RocketGroundStation/issues"
+    "url": "https://github.com/aaroexxt/LitProject/issues"
   },
-  "homepage": "https://github.com/aaroexxt/RocketGroundStation#readme",
+  "homepage": "https://github.com/aaroexxt/LitProject#readme",
   "devDependencies": {},
   "dependencies": {
     "ejs": "^3.1.6",

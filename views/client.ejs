@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Inquiry Project 2021</title>
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/custom.css">
+		<meta charset="utf-8">
+    	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	</head>
+
+	<body>
+		<center>
+			<h1>Inquiry Project 2021</h1>
+			<h4>Designed & Programmed By Aaron Becker</h4>
+
+			<br />
+			<br />
+			<div class="fadeInOut">
+				<div id="c-reset">
+					<p class="demoTitle">Please wait for the presentation to start</p>
+				</div>
+			</div>
+
+			<div id="c-wait">
+				<p class="demoTitle">Please wait for the next question to participate</p>
+			</div>
+
+			<div id="c-intro">
+				<p class="demoTitle">Welcome to my presentation on creativity!</p>
+			</div>
+
+			<div id="c-my-creativity">
+				<p class="demoTitle">My Creativity</p>
+					<li>
+						Music & video production
+					</li>
+					<li>
+						Building & programming
+					</li>
+					<li>
+						Web apps: this application was built on Node.JS + Express in <b>621</b> lines of code and deployed on Heroku
+					</li>
+					<p class="creaTitle">
+						Most of all, I find creative expression in this form to be satisfying, just like many other creative pursuits (art, movies etc.)
+					</p>
+			</div>
+
+			<div id="c-thanks">
+				<p class="demoTitle">Thanks for listening to my presentation!</p>
+			</div>
+		</center>
+
+		<div id="c-question1">
+			<center>
+				<h3 class="qHeader">Question 1</h3>
+				<b>
+					Which of the following options do you most identify with?
+				</b>
+				<br />
+				<br />
+			</center>
+			<p class="qContent">
+				A. Individuals are born with a fixed potential amount of creativity.
+				<br />
+				B. There is no limit on an individual's creativity, if it is worked on.
+				<br />
+				C. Individual creativity isn't fixed or unlimited, but is more affected by the environent that you're in.
+			</p>
+			<br />
+
+			<center>
+				<button onClick="sendChoice('Fixed Potential');">Choose A</button>
+				<button onClick="sendChoice('No Limit');">Choose B</button>
+				<button onClick="sendChoice('Affected By Environment');">Choose C</button>
+			</center>
+		</div>
+
+		<div id="c-question2">
+			<center>
+				<h3 class="qHeader">Question 2</h3>
+				<b>
+					Which of the following options do you most identify with?
+				</b>
+				<br />
+				<br />
+			</center>
+			<p class="qContent">
+				A. Creative potential is affected strongly by SES (socioeconomic status)
+				<br />
+				B. Creative potential is somewhat affected by SES (socioeconomic status)
+				<br />
+				C. There is no relation between creativity and SES
+			</p>
+			<br />
+
+			<center>
+				<button onClick="sendChoice('Affected Strongly');">Choose A</button>
+				<button onClick="sendChoice('Somewhat Affected');">Choose B</button>
+				<button onClick="sendChoice('No Relation');">Choose C</button>
+			</center>
+		</div>
+
+		<div id="c-question3">
+			<center>
+				<h3 class="qHeader">Question 3</h3>
+				<b>
+					Which of the following options do you most identify with?
+				</b>
+				<br />
+				<br />
+			</center>
+			<p class="qContent">
+				A. Different cultures affect the amount of creativity shown
+				<br />
+				B. Different cultures affect the way creativity is displayed
+				<br />
+				C. Different cultures affect both amount and way creativity is displayed
+				<br />
+				D. There is no relation between creativity and culture
+			</p>
+			<br />
+
+			<center>
+				<button onClick="sendChoice('Affects Amount');">Choose A</button>
+				<button onClick="sendChoice('Affects Display');">Choose B</button>
+				<button onClick="sendChoice('Affects Amount+Display');">Choose C</button>
+				<button onClick="sendChoice('No Relation');">Choose D</button>
+			</center>
+		</div>
+
+		<div id="c-exit-poll">
+			<center>
+				<h3 class="qHeader">Exit Poll</h3>
+				<b>
+					How much do you think this interactive component added to my presentation?
+				</b>
+				<br />
+				<br />
+			</center>
+			<p class="qContent">
+				A. It was great! Helped me understand where others were at
+				<br />
+				B. It was okay, questions could have been better
+				<br />
+				C. It didn't really help me, but didn't hurt
+				<br />
+				D. It made it harder to follow what you were saying
+			</p>
+			<br />
+
+			<center>
+				<button onClick="sendChoice('Very Good');">Choose A</button>
+				<button onClick="sendChoice('Good');">Choose B</button>
+				<button onClick="sendChoice('Neutral');">Choose C</button>
+				<button onClick="sendChoice('Not Good');">Choose D</button>
+			</center>
+		</div>
+
+
+		<h4 id="choiceInfo">
+			Your choice has been saved.
+		</h4>
+
+		<nav class="nav fixed-bottom navbar-dark bg-dark justify-content-center">
+			<li class="navbar-brand">
+				<span id="connect-server-status" class="text-danger">Server Connection: NC</span>
+			</li>
+		</nav>
+
+		<script src="socket.io/socket.io.js"></script>
+	</body>
+
+	<script>
+	console.log("%cif you're here try not to poke around too much please :))",'color:#ff0000');
+	let loc = window.location.href;
+	var socket = io.connect(loc.substring(0, loc.lastIndexOf("/"))+":"+(window.location.port||80), {
+		withCredentials: true
+	});
+
+	var connectedServer = false;
+	socket.on('connect', () => {
+		console.log("Connected to server");
+		connectedServer = true;
+		changeState("c-reset");
+		updateConnectionIndicator();
+	});
+	socket.on('disconnect', () => {
+		console.log("Disconnected from server");
+		connectedServer = false;
+		changeState("c-reset");
+		updateConnectionIndicator();
+	});
+
+	const sendChoice = choice => {
+		buttonVisibility(false);
+		socket.emit("demo-choice", choice);
+		let elem = document.getElementById("choiceInfo");
+		elem.style.display = "block";
+		elem.className = "fadeIn";
+		setTimeout(() => {
+			elem.className = "fadeOut";
+		}, 1500);
+		setTimeout(() => {
+			elem.style.display = "none";
+		}, 2500);
+	}
+
+	const buttonVisibility = vis => {
+		let elems = document.getElementsByTagName("button");
+		for (let i=0; i<elems.length; i++) {
+			elems[i].style.display = vis ? "inline" : "none";
+		}
+	}
+
+	let elems = ["c-reset", "c-intro", "c-question1", "c-wait", "c-question2", "c-question3", "c-my-creativity", "c-exit-poll", "c-thanks"];
+	const changeState = state => {
+		for (let i=0; i<elems.length; i++) {
+			document.getElementById(elems[i]).style.display = "none";
+		}
+
+		document.getElementById(state).style.display = "block";
+		buttonVisibility(true);
+	}
+
+	socket.on('demo-change', (state) => {
+		if (typeof state != "undefined") {
+			console.log("GOT new state from server: '"+state+"'");
+
+			changeState("c-"+state);
+		}
+	})
+
+	const updateConnectionIndicator = () => {
+		let statServer = document.getElementById("connect-server-status");
+		statServer.innerHTML = "Server Connection: "+(connectedServer?"OK":"NC");
+		statServer.className = (connectedServer?"":"text-danger");
+	}
+	</script>
+</html>
