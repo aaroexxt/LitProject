@@ -70,7 +70,9 @@
 
 	<script>
 	let loc = window.location.href;
-	var socket = io.connect(loc.substring(0, loc.lastIndexOf("/"))+"/:"+(window.location.port||80), {
+	let cUrl = loc.substring(0, loc.lastIndexOf("/"))+":"+(window.location.port||80);
+	console.log("servURL: "+cUrl);
+	var socket = io.connect(cUrl, {
 		withCredentials: true
 	});
 
